@@ -1,4 +1,4 @@
-package concept.concept;
+package selenium.concept;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;

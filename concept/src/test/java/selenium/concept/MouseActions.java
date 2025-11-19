@@ -1,4 +1,4 @@
-package concept.concept;
+package selenium.concept;
 
 import static org.testng.Assert.assertEquals;
 
