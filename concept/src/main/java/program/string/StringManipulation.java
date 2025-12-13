@@ -1,4 +1,4 @@
-package concept.string;
+package program.string;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,79 +7,18 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
-/**
- * Hello world!
- */
 public class StringManipulation {
-	// 1. Find the length of a string.
-	public static int getStringLength(String str) {
-		return str.length();
-	}
+	
 
-	// 2. Count the total number of characters (excluding spaces).
-	public static int getCharacterCountWithSpace(String str) {
-		int count = 0;
-		for (int i = 0; i < str.length(); i++) {
-			if (str.charAt(i) != ' ') {
-				count++;
-			}
-		}
-		return count;
+	
 
-	}
 
-	// 3. Count the number of words in a string.
-	public static int getWordsCount(String str) {
-		return str.split(" ").length;
-	}
 
-	// 4. Count the total number of vowels and consonants.
-	public static void getVowelNConsonantsCount(String str) {
+	
 
-		str = str.toLowerCase();
-		int vowel = 0, consonant = 0;
-		for (int i = 0; i < str.length(); i++) {
-			char ch = str.charAt(i);
-			if (ch >= 'a' && ch <= 'z') {
-				if (ch == 'a' || ch == 'e' || ch == 'i' | ch == 'o' || ch == 'u') {
-					vowel++;
-				} else {
-					consonant++;
-				}
-			}
-		}
+	
 
-		System.out.println("Vowels Count: " + vowel);
-		System.out.println("Consonants Count: " + consonant);
-
-	}
-
-	// 5. Check if a string contains only digits.
-
-	public static boolean isStringContainsDigitOnly(String str) {
-		boolean result = true;
-		for (int i = 0; i < str.length(); i++) {
-			char ch = str.charAt(i);
-			if (!(ch >= '0' && ch <= '9')) {
-				result = false;
-				break;
-			}
-		}
-
-		return result;
-	}
-
-	// 6. Find the frequency of a specific character.
-	public static int getSpecifcCharacterfrequency(String str, char ch) {
-		int freq = 0;
-		for (int i = 0; i < str.length(); i++) {
-			if (str.charAt(i) == ch) {
-				freq++;
-			}
-		}
-
-		return freq;
-	}
+	
 
 	// 7. Find the ASCII value of each character.
 
@@ -414,9 +353,6 @@ public class StringManipulation {
 
 	// 45. Find the first non-repeating character.
 	public static LinkedHashMap<Character, Integer> characterFrequencyOrderPerserve(String str) {
-
-		char firstNonRepeatingChar = ' ';
-
 		LinkedHashMap<Character, Integer> data = new LinkedHashMap<>();
 		for (char ch : str.toCharArray()) {
 			if (data.containsKey(ch)) {
