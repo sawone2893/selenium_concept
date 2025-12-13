@@ -1,4 +1,4 @@
-package concept.arrays;
+package program.arrays;
 
 public class ArraysManipulation {
 

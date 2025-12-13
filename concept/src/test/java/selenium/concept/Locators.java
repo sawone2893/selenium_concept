@@ -1,4 +1,4 @@
-package concept.concept;
+package selenium.concept;
 
 public class Locators {
 	
