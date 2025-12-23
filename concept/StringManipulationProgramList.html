@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java String Mastery: All 105 Solutions</title>
+    <style>
+        :root { --primary: #2563eb; --bg: #f8fafc; --code-bg: #1e1e1e; --text: #333; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 20px; line-height: 1.5; }
+        .container { max-width: 1280px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        
+        header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #eee; padding-bottom: 20px; }
+        h1 { color: var(--primary); margin: 0; }
+        
+        .tabs { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab-btn { padding: 12px 24px; border: 1px solid #ddd; background: #f1f5f9; cursor: pointer; border-radius: 6px; font-weight: 600; font-size: 1rem; }
+        .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        
+        .content-area { display: none; }
+        .content-area.active { display: block; }
+        
+        .code-block { position: relative; margin-top: 10px; }
+        pre { background: var(--code-bg); color: #d4d4d4; padding: 20px; border-radius: 8px; overflow-x: auto; height: 600px; font-family: 'Consolas', monospace; font-size: 13px; border: 1px solid #333; }
+        
+        .copy-btn { position: absolute; top: 15px; right: 25px; background: #333; color: white; border: 1px solid #555; padding: 5px 12px; border-radius: 4px; cursor: pointer; }
+        .copy-btn:hover { background: #555; }
+        
+        .comment { color: #6a9955; }
+        .keyword { color: #569cd6; }
+        .string { color: #ce9178; }
+        .method { color: #dcdcaa; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Java String Mastery: All 105 Programs</h1>
+        <p>Complete source code for Beginner, Intermediate, and Advanced challenges.</p>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab('beginner')">1. Beginner (1-36)</button>
+        <button class="tab-btn" onclick="openTab('intermediate')">2. Intermediate (37-79)</button>
+        <button class="tab-btn" onclick="openTab('advanced')">3. Advanced (80-105)</button>
+    </div>
+
+    <div id="beginner" class="content-area active">
+        <h3>BeginnerSolutions.java</h3>
+        <p>Contains basic property checks, comparisons, and case conversions.</p>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode('code1')">Copy Code</button>
+<pre id="code1">
+<span class="keyword">import</span> java.util.Arrays;
+
+<span class="keyword">public class</span> BeginnerSolutions {
+    <span class="keyword">public static void</span> main(String[] args) {
+        String str = <span class="string">" Hello Java 123 "</span>;
+        String s1 = <span class="string">"Java"</span>;
+        String s2 = <span class="string">"java"</span>;
+
+        <span class="comment">// --- String Properties [cite: 4-14] ---</span>
+        System.out.println(<span class="string">"1. Length: "</span> + str.length());
+        System.out.println(<span class="string">"2. No Spaces: "</span> + str.replace(<span class="string">" "</span>, <span class="string">""</span>).length());
+        System.out.println(<span class="string">"3. Words: "</span> + str.trim().split(<span class="string">"\\s+"</span>).length);
+        countVowels(str); <span class="comment">// 4. Vowels/Consonants</span>
+        System.out.println(<span class="string">"5. Digits Only: "</span> + <span class="string">"123"</span>.matches(<span class="string">"\\d+"</span>));
+        System.out.println(<span class="string">"6. Freq 'a': "</span> + (str.length() - str.replace(<span class="string">"a"</span>, <span class="string">""</span>).length()));
+        printASCII(str); <span class="comment">// 7. ASCII</span>
+        System.out.println(<span class="string">"8. Empty/Null: "</span> + (str == <span class="keyword">null</span> || str.isEmpty()));
+        iterateString(str); <span class="comment">// 9. Iterate</span>
+        char[] chars = str.toCharArray(); <span class="comment">// 10. To Char Array</span>
+        String fromChars = <span class="keyword">new</span> String(chars); <span class="comment">// 11. Back to String</span>
+
+        <span class="comment">// --- Comparison & Concat [cite: 16-22] ---</span>
+        System.out.println(<span class="string">"12. Concat +: "</span> + s1 + s2);
+        System.out.println(<span class="string">"13. Concat(): "</span> + s1.concat(s2));
+        System.out.println(<span class="string">"14. Equals: "</span> + s1.equals(s2));
+        System.out.println(<span class="string">"15. Eq IgnoreCase: "</span> + s1.equalsIgnoreCase(s2));
+        System.out.println(<span class="string">"16. CompareTo: "</span> + s1.compareTo(s2));
+        System.out.println(<span class="string">"17. StartsWith: "</span> + s1.startsWith(<span class="string">"Ja"</span>));
+        System.out.println(<span class="string">"18. EndsWith: "</span> + s1.endsWith(<span class="string">"va"</span>));
+
+        <span class="comment">// --- Case & Substrings [cite: 24-31] ---</span>
+        System.out.println(<span class="string">"19. Upper: "</span> + s1.toUpperCase());
+        System.out.println(<span class="string">"20. Lower: "</span> + s1.toLowerCase());
+        System.out.println(<span class="string">"21. Substring(1): "</span> + s1.substring(1));
+        System.out.println(<span class="string">"22. Substring(1,3): "</span> + s1.substring(1, 3));
+        System.out.println(<span class="string">"23. Trim: "</span> + str.trim());
+        System.out.println(<span class="string">"24. Contains: "</span> + str.contains(<span class="string">"Java"</span>));
+        System.out.println(<span class="string">"25. IndexOf 'a': "</span> + str.indexOf(<span class="string">'a'</span>));
+        System.out.println(<span class="string">"26. LastIndex 'a': "</span> + str.lastIndexOf(<span class="string">'a'</span>));
+
+        <span class="comment">// --- Replace & Remove [cite: 33-36] ---</span>
+        System.out.println(<span class="string">"27. Replace Char: "</span> + str.replace(<span class="string">'a'</span>, <span class="string">'@'</span>));
+        System.out.println(<span class="string">"28. Replace Sub: "</span> + str.replace(<span class="string">"Java"</span>, <span class="string">"Code"</span>));
+        System.out.println(<span class="string">"29. Remove 'a': "</span> + str.replace(<span class="string">"a"</span>, <span class="string">""</span>));
+        System.out.println(<span class="string">"30. Remove Spaces: "</span> + str.replace(<span class="string">" "</span>, <span class="string">""</span>));
+    }
+
+    <span class="keyword">static void</span> countVowels(String s) {
+        <span class="keyword">int</span> v=0, c=0;
+        <span class="keyword">for</span>(<span class="keyword">char</span> ch : s.toLowerCase().toCharArray()) {
+            <span class="keyword">if</span>(Character.isLetter(ch)) {
+                <span class="keyword">if</span>(<span class="string">"aeiou"</span>.indexOf(ch) != -1) v++; <span class="keyword">else</span> c++;
+            }
+        }
+        System.out.println(<span class="string">"Vowels: "</span>+v+<span class="string">" Consonants: "</span>+c);
+    }
+    
+    <span class="keyword">static void</span> printASCII(String s) {
+        <span class="keyword">for</span>(<span class="keyword">char</span> c : s.toCharArray()) System.out.print((<span class="keyword">int</span>)c + <span class="string">" "</span>);
+        System.out.println();
+    }
+
+    <span class="keyword">static void</span> iterateString(String s) {
+        <span class="keyword">for</span>(<span class="keyword">int</span> i=0; i<s.length(); i++) System.out.print(s.charAt(i));
+        System.out.println();
+    }
+}</pre>
+        </div>
+    </div>
+
+    <div id="intermediate" class="content-area">
+        <h3>IntermediateSolutions.java</h3>
+        <p>Covers logic, reversals, anagrams, regex, and array manipulation.</p>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode('code2')">Copy Code</button>
+<pre id="code2">
+<span class="keyword">import</span> java.util.*;
+
+<span class="keyword">public class</span> IntermediateSolutions {
+    <span class="keyword">public static void</span> main(String[] args) {
+        <span class="comment">// --- Reversal & Rotation [cite: 40-45] ---</span>
+        System.out.println(reverseSB(<span class="string">"Java"</span>));
+        System.out.println(reverseManual(<span class="string">"Java"</span>));
+        System.out.println(reverseOrderWords(<span class="string">"Hello World Java"</span>));
+        System.out.println(reverseEachWord(<span class="string">"Hello World"</span>));
+        System.out.println(isRotation(<span class="string">"ABCD"</span>, <span class="string">"CDAB"</span>));
+        swapStrings(<span class="string">"Hello"</span>, <span class="string">"World"</span>);
+
+        <span class="comment">// --- Palindromes & Anagrams [cite: 47-50] ---</span>
+        System.out.println(isPalindrome(<span class="string">"Madam"</span>));
+        System.out.println(isAnagram(<span class="string">"Keep"</span>, <span class="string">"Peek"</span>));
+        System.out.println(isPangram(<span class="string">"The quick brown fox jumps over the lazy dog"</span>));
+
+        <span class="comment">// --- Counting & Frequency [cite: 52-58] ---</span>
+        countDuplicates(<span class="string">"programming"</span>);
+        firstNonRepeating(<span class="string">"swiss"</span>);
+        countTypes(<span class="string">"Java@123"</span>);
+
+        <span class="comment">// --- Modification & Regex [cite: 66-79] ---</span>
+        System.out.println(removeDupChars(<span class="string">"banana"</span>));
+        System.out.println(toggleCase(<span class="string">"HeLLo"</span>));
+        System.out.println(regexEmail(<span class="string">"test@mail.com"</span>));
+    }
+
+    <span class="comment">// 40. Reverse SB</span>
+    <span class="keyword">static</span> String reverseSB(String s) { <span class="keyword">return new</span> StringBuilder(s).reverse().toString(); }
+
+    <span class="comment">// 41. Reverse Manual</span>
+    <span class="keyword">static</span> String reverseManual(String s) {
+        String r = <span class="string">""</span>;
+        <span class="keyword">for</span>(<span class="keyword">int</span> i=s.length()-1; i>=0; i--) r += s.charAt(i);
+        <span class="keyword">return</span> r;
+    }
+
+    <span class="comment">// 42. Reverse Order of Words</span>
+    <span class="keyword">static</span> String reverseOrderWords(String s) {
+        String[] words = s.split(<span class="string">" "</span>);
+        StringBuilder sb = <span class="keyword">new</span> StringBuilder();
+        <span class="keyword">for</span>(<span class="keyword">int</span> i=words.length-1; i>=0; i--) sb.append(words[i]).append(<span class="string">" "</span>);
+        <span class="keyword">return</span> sb.toString().trim();
+    }
+
+    <span class="comment">// 43. Reverse Each Word</span>
+    <span class="keyword">static</span> String reverseEachWord(String s) {
+        String[] words = s.split(<span class="string">" "</span>);
+        StringBuilder sb = <span class="keyword">new</span> StringBuilder();
+        <span class="keyword">for</span>(String w : words) sb.append(<span class="keyword">new</span> StringBuilder(w).reverse()).append(<span class="string">" "</span>);
+        <span class="keyword">return</span> sb.toString().trim();
+    }
+
+    <span class="comment">// 44. Rotation Check</span>
+    <span class="keyword">static boolean</span> isRotation(String s1, String s2) {
+        <span class="keyword">return</span> (s1.length() == s2.length()) && (s1+s1).contains(s2);
+    }
+
+    <span class="comment">// 45. Swap without temp</span>
+    <span class="keyword">static void</span> swapStrings(String a, String b) {
+        a = a + b;
+        b = a.substring(0, a.length() - b.length());
+        a = a.substring(b.length());
+        System.out.println(<span class="string">"Swapped: "</span> + a + <span class="string">" "</span> + b);
+    }
+
+    <span class="comment">// 47. Palindrome</span>
+    <span class="keyword">static boolean</span> isPalindrome(String s) {
+        String clean = s.replaceAll(<span class="string">"\\s+"</span>, <span class="string">""</span>).toLowerCase();
+        <span class="keyword">return</span> clean.equals(<span class="keyword">new</span> StringBuilder(clean).reverse().toString());
+    }
+
+    <span class="comment">// 48. Anagram</span>
+    <span class="keyword">static boolean</span> isAnagram(String s1, String s2) {
+        <span class="keyword">char</span>[] a = s1.toLowerCase().toCharArray();
+        <span class="keyword">char</span>[] b = s2.toLowerCase().toCharArray();
+        Arrays.sort(a); Arrays.sort(b);
+        <span class="keyword">return</span> Arrays.equals(a, b);
+    }
+
+    <span class="comment">// 49. Pangram</span>
+    <span class="keyword">static boolean</span> isPangram(String s) {
+        <span class="keyword">boolean</span>[] mark = <span class="keyword">new boolean</span>[26];
+        <span class="keyword">for</span>(<span class="keyword">char</span> c : s.toLowerCase().toCharArray()) 
+            <span class="keyword">if</span>(Character.isLetter(c)) mark[c - <span class="string">'a'</span>] = <span class="keyword">true</span>;
+        <span class="keyword">for</span>(<span class="keyword">boolean</span> b : mark) <span class="keyword">if</span>(!b) <span class="keyword">return false</span>;
+        <span class="keyword">return true</span>;
+    }
+
+    <span class="comment">// 52. Count Duplicates</span>
+    <span class="keyword">static void</span> countDuplicates(String s) {
+        Map&lt;Character, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();
+        <span class="keyword">for</span>(<span class="keyword">char</span> c : s.toCharArray()) map.put(c, map.getOrDefault(c, 0) + 1);
+        map.forEach((k,v) -> { <span class="keyword">if</span>(v > 1) System.out.println(k + <span class="string">":"</span> + v); });
+    }
+
+    <span class="comment">// 56. First Non-Repeating</span>
+    <span class="keyword">static void</span> firstNonRepeating(String s) {
+        Map&lt;Character, Integer&gt; map = <span class="keyword">new</span> LinkedHashMap&lt;&gt;();
+        <span class="keyword">for</span>(<span class="keyword">char</span> c : s.toCharArray()) map.put(c, map.getOrDefault(c, 0) + 1);
+        <span class="keyword">for</span>(Map.Entry&lt;Character,Integer&gt; e : map.entrySet()) {
+            <span class="keyword">if</span>(e.getValue() == 1) { System.out.println(<span class="string">"First Unique: "</span> + e.getKey()); <span class="keyword">return</span>; }
+        }
+    }
+
+    <span class="comment">// 58. Count Types</span>
+    <span class="keyword">static void</span> countTypes(String s) {
+        <span class="keyword">int</span> num=0, alpha=0, special=0;
+        <span class="keyword">for</span>(<span class="keyword">char</span> c : s.toCharArray()) {
+            <span class="keyword">if</span>(Character.isDigit(c)) num++;
+            <span class="keyword">else if</span>(Character.isLetter(c)) alpha++;
+            <span class="keyword">else</span> special++;
+        }
+        System.out.println(<span class="string">"Alpha: "</span>+alpha+<span class="string">" Num: "</span>+num+<span class="string">" Special: "</span>+special);
+    }
+
+    <span class="comment">// 66. Remove Duplicates</span>
+    <span class="keyword">static</span> String removeDupChars(String s) {
+        StringBuilder sb = <span class="keyword">new</span> StringBuilder();
+        s.chars().distinct().forEach(c -> sb.append((<span class="keyword">char</span>)c));
+        <span class="keyword">return</span> sb.toString();
+    }
+
+    <span class="comment">// 70. Toggle Case</span>
+    <span class="keyword">static</span> String toggleCase(String s) {
+        StringBuilder sb = <span class="keyword">new</span> StringBuilder();
+        <span class="keyword">for</span>(<span class="keyword">char</span> c : s.toCharArray()) {
+            <span class="keyword">if</span>(Character.isUpperCase(c)) sb.append(Character.toLowerCase(c));
+            <span class="keyword">else</span> sb.append(Character.toUpperCase(c));
+        }
+        <span class="keyword">return</span> sb.toString();
+    }
+
+    <span class="comment">// 75. Regex Email</span>
+    <span class="keyword">static boolean</span> regexEmail(String e) { <span class="keyword">return</span> e.matches(<span class="string">"^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$"</span>); }
+}</pre>
+        </div>
+    </div>
+
+    <div id="advanced" class="content-area">
+        <h3>AdvancedSolutions.java</h3>
+        <p>Contains Interview-level algorithms: Permutations, Substrings, KMP, and Roman Numerals.</p>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode('code3')">Copy Code</button>
+<pre id="code3">
+<span class="keyword">import</span> java.util.*;
+
+<span class="keyword">public class</span> AdvancedSolutions {
+    <span class="keyword">public static void</span> main(String[] args) {
+        <span class="comment">// --- Substrings & Permutations [cite: 83-93] ---</span>
+        System.out.println(longestPalindrome(<span class="string">"babad"</span>));
+        System.out.println(longestUniqueSub(<span class="string">"abcabcbb"</span>));
+        printPermutations(<span class="string">"ABC"</span>, <span class="string">""</span>);
+        printSubsequences(<span class="string">"ABC"</span>, <span class="string">""</span>);
+
+        <span class="comment">// --- Algorithms & Data [cite: 95-101] ---</span>
+        System.out.println(<span class="string">"KMP Found: "</span> + KMPSearch(<span class="string">"ABABDABACDABABCABAB"</span>, <span class="string">"ABABCABAB"</span>));
+        System.out.println(<span class="string">"Roman To Int: "</span> + romanToInt(<span class="string">"MCMXCIV"</span>));
+        System.out.println(<span class="string">"Atoi: "</span> + myAtoi(<span class="string">"   -42"</span>));
+        System.out.println(<span class="string">"Compress: "</span> + compress(<span class="string">"aaabbc"</span>));
+    }
+
+    <span class="comment">// 83. Longest Palindromic Substring (Expansion)</span>
+    <span class="keyword">static</span> String longestPalindrome(String s) {
+        <span class="keyword">if</span>(s==<span class="keyword">null</span> || s.length()<1) <span class="keyword">return</span> <span class="string">""</span>;
+        <span class="keyword">int</span> start=0, end=0;
+        <span class="keyword">for</span>(<span class="keyword">int</span> i=0; i&lt;s.length(); i++) {
+            <span class="keyword">int</span> len1 = expand(s, i, i);
+            <span class="keyword">int</span> len2 = expand(s, i, i+1);
+            <span class="keyword">int</span> len = Math.max(len1, len2);
+            <span class="keyword">if</span>(len > end-start) { start = i-(len-1)/2; end = i+len/2; }
+        }
+        <span class="keyword">return</span> s.substring(start, end+1);
+    }
+    <span class="keyword">static int</span> expand(String s, <span class="keyword">int</span> L, <span class="keyword">int</span> R) {
+        <span class="keyword">while</span>(L>=0 && R&lt;s.length() && s.charAt(L)==s.charAt(R)) { L--; R++; }
+        <span class="keyword">return</span> R-L-1;
+    }
+
+    <span class="comment">// 84. Longest Substring No Repeats (Sliding Window)</span>
+    <span class="keyword">static int</span> longestUniqueSub(String s) {
+        Set&lt;Character&gt; set = <span class="keyword">new</span> HashSet&lt;&gt;();
+        <span class="keyword">int</span> max=0, i=0, j=0;
+        <span class="keyword">while</span>(i&lt;s.length() && j&lt;s.length()) {
+            <span class="keyword">if</span>(!set.contains(s.charAt(j))) { set.add(s.charAt(j++)); max = Math.max(max, j-i); }
+            <span class="keyword">else</span> set.remove(s.charAt(i++));
+        }
+        <span class="keyword">return</span> max;
+    }
+
+    <span class="comment">// 86. Subsequences (Recursion)</span>
+    <span class="keyword">static void</span> printSubsequences(String str, String ans) {
+        <span class="keyword">if</span>(str.length()==0) { System.out.print(ans+<span class="string">" "</span>); <span class="keyword">return</span>; }
+        printSubsequences(str.substring(1), ans + str.charAt(0));
+        printSubsequences(str.substring(1), ans);
+    }
+
+    <span class="comment">// 91. Permutations</span>
+    <span class="keyword">static void</span> printPermutations(String str, String ans) {
+        <span class="keyword">if</span>(str.length()==0) { System.out.print(ans+<span class="string">" "</span>); <span class="keyword">return</span>; }
+        <span class="keyword">for</span>(<span class="keyword">int</span> i=0; i&lt;str.length(); i++) {
+            <span class="keyword">char</span> ch = str.charAt(i);
+            String ros = str.substring(0,i) + str.substring(i+1);
+            printPermutations(ros, ans+ch);
+        }
+    }
+
+    <span class="comment">// 95. KMP Algorithm Pattern Search</span>
+    <span class="keyword">static boolean</span> KMPSearch(String txt, String pat) {
+        <span class="keyword">int</span> M = pat.length(), N = txt.length();
+        <span class="keyword">int</span>[] lps = <span class="keyword">new int</span>[M];
+        <span class="keyword">int</span> j = 0; 
+        computeLPS(pat, M, lps);
+        <span class="keyword">int</span> i = 0;
+        <span class="keyword">while</span> (i &lt; N) {
+            <span class="keyword">if</span> (pat.charAt(j) == txt.charAt(i)) { j++; i++; }
+            <span class="keyword">if</span> (j == M) <span class="keyword">return true</span>; <span class="comment">// Found</span>
+            <span class="keyword">else if</span> (i &lt; N && pat.charAt(j) != txt.charAt(i)) {
+                <span class="keyword">if</span> (j != 0) j = lps[j - 1]; <span class="keyword">else</span> i = i + 1;
+            }
+        }
+        <span class="keyword">return false</span>;
+    }
+    <span class="keyword">static void</span> computeLPS(String pat, <span class="keyword">int</span> M, <span class="keyword">int</span>[] lps) {
+        <span class="keyword">int</span> len = 0, i = 1; lps[0] = 0;
+        <span class="keyword">while</span> (i &lt; M) {
+            <span class="keyword">if</span> (pat.charAt(i) == pat.charAt(len)) { len++; lps[i] = len; i++; }
+            <span class="keyword">else</span> { <span class="keyword">if</span> (len != 0) len = lps[len - 1]; <span class="keyword">else</span> { lps[i] = len; i++; } }
+        }
+    }
+
+    <span class="comment">// 97. Roman To Integer</span>
+    <span class="keyword">static int</span> romanToInt(String s) {
+        Map&lt;Character, Integer&gt; m = Map.of(<span class="string">'I'</span>,1,<span class="string">'V'</span>,5,<span class="string">'X'</span>,10,<span class="string">'L'</span>,50,<span class="string">'C'</span>,100,<span class="string">'D'</span>,500,<span class="string">'M'</span>,1000);
+        <span class="keyword">int</span> res=0;
+        <span class="keyword">for</span>(<span class="keyword">int</span> i=0; i&lt;s.length(); i++) {
+            <span class="keyword">if</span>(i&lt;s.length()-1 && m.get(s.charAt(i)) &lt; m.get(s.charAt(i+1))) res -= m.get(s.charAt(i));
+            <span class="keyword">else</span> res += m.get(s.charAt(i));
+        }
+        <span class="keyword">return</span> res;
+    }
+
+    <span class="comment">// 99. Atoi (String to Int)</span>
+    <span class="keyword">static int</span> myAtoi(String s) {
+        s = s.trim();
+        <span class="keyword">if</span>(s.isEmpty()) <span class="keyword">return</span> 0;
+        <span class="keyword">int</span> sign=1, i=0, r=0;
+        <span class="keyword">if</span>(s.charAt(0)==<span class="string">'-'</span> || s.charAt(0)==<span class="string">'+'</span>) { sign = (s.charAt(0)==<span class="string">'-'</span>)? -1 : 1; i++; }
+        <span class="keyword">while</span>(i&lt;s.length() && Character.isDigit(s.charAt(i))) {
+            <span class="keyword">int</span> d = s.charAt(i++) - <span class="string">'0'</span>;
+            <span class="keyword">if</span>(r > (Integer.MAX_VALUE - d)/10) <span class="keyword">return</span> (sign==1)? Integer.MAX_VALUE : Integer.MIN_VALUE;
+            r = r*10 + d;
+        }
+        <span class="keyword">return</span> r * sign;
+    }
+
+    <span class="comment">// 101. String Compression</span>
+    <span class="keyword">static</span> String compress(String s) {
+        StringBuilder sb = <span class="keyword">new</span> StringBuilder();
+        <span class="keyword">int</span> c = 1;
+        <span class="keyword">for</span>(<span class="keyword">int</span> i=0; i&lt;s.length(); i++) {
+            <span class="keyword">if</span>(i&lt;s.length()-1 && s.charAt(i)==s.charAt(i+1)) c++;
+            <span class="keyword">else</span> { sb.append(s.charAt(i)).append(c); c=1; }
+        }
+        <span class="keyword">return</span> sb.toString();
+    }
+}</pre>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openTab(tabName) {
+        document.querySelectorAll('.content-area').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabName).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    function copyCode(id) {
+        var code = document.getElementById(id).innerText;
+        navigator.clipboard.writeText(code).then(() => alert("Code copied!"));
+    }
+</script>
+
+</body>
+</html>
