@@ -1,4 +1,4 @@
-package testCases;
+package sdet.capstone.testcases;
 
 import java.util.Map;
 
@@ -11,13 +11,16 @@ import pages.HomePage;
 import utils.ExcelManager;
 import utils.PropertyFileManger;
 
-public class TC4 extends BaseTest {
+public class TC5 extends BaseTest {
 
 	@Test
-	public void validateBankManagerHomePageTitleAfterLogin() {
-		Map<String, String> testcaseData = ExcelManager.getTestCaseData("TC4");
+	public void validateBankManagerHomePageUIElementsAfterLogin() {
+		Map<String,String> testcaseData=ExcelManager.getTestCaseData("TC5");
 		HomePage.enterCredentials(testcaseData.get("USER_ID"), testcaseData.get("PASSWORD"));
 		Assert.assertEquals(BankMangerHomePage.getBankMangerHomePageTitle(),
 				PropertyFileManger.getPropertyValue("BANK_MANAGER_HOME_PAGE_TITLE"), "Title Mismatch");
+		Assert.assertTrue(BankMangerHomePage.isManagerHyperLinkDisplayed(), "Manager Hyperlink is not displayed");
+		Assert.assertTrue(BankMangerHomePage.isNewCustomerHyperLinkDisplayed(),
+				"New Customer Hyperlink is not displayed");
 	}
 }

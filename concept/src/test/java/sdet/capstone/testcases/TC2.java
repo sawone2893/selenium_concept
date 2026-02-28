@@ -1,4 +1,4 @@
-package testCases;
+package sdet.capstone.testcases;
 
 
 
