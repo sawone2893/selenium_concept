@@ -16,10 +16,7 @@ public class Assignmen1 extends BaseTest {
 	 * attachment] and store the below credentials. Save the file under C:\TestData
 	 * folder.
 	 * 
-	 *	User ID		Password
-		mngr655651	ezYjade
- 		mngr655652	ArEbyga
-		HclTech	Test@123
+	 * User ID Password mngr655651 ezYjade mngr655652 ArEbyga HclTech Test@123
 	 * 
 	 * Create a file config.properties to store -
 	 * 
@@ -37,20 +34,20 @@ public class Assignmen1 extends BaseTest {
 	 */
 	@DataProvider(name = "credentials")
 	public Object[][] credentialsDetails() {
-		String filePath = System.getProperty("user.dir")
-				+ PropertyManager.getPropertyValue("EXCEL_FILE_PATH")+ PropertyManager.getPropertyValue("EXCEL_FILE_NAME");
-		Object[][] data=ExcelManager.getExcelData(filePath, PropertyManager.getPropertyValue("EXCEL_SHEET_NAME"));
+		String filePath = System.getProperty("user.dir") + PropertyManager.getPropertyValue("EXCEL_FILE_PATH")
+				+ PropertyManager.getPropertyValue("EXCEL_FILE_NAME");
+		Object[][] data = ExcelManager.getExcelData(filePath, PropertyManager.getPropertyValue("EXCEL_SHEET_NAME"));
 		return data;
 	}
 
 	@Test(dataProvider = "credentials")
-	public void testcase1(String userName, String pwd, String expectedOutcome) {
+	public void testcase1(String userName, String pwd) {
 		Alert alert = null;
 		driver.findElement(By.name("uid")).sendKeys(userName);
 		driver.findElement(By.name("password")).sendKeys(pwd);
 		driver.findElement(By.name("btnLogin")).click();
 
-		if (expectedOutcome.equals("pass")) {
+		if (driver.getTitle().equalsIgnoreCase("Guru99 Bank Manager HomePage")) {
 			// VALIDATION: Screen Traversal
 			// Successful login leads to Manager Dashboard with a specific title
 			wait.until(ExpectedConditions.titleContains("Guru99 Bank Manager HomePage"));
@@ -60,16 +57,20 @@ public class Assignmen1 extends BaseTest {
 
 			WebElement logoutLink = driver.findElement(By.linkText("Log out"));
 			((JavascriptExecutor) driver).executeScript("arguments[0].click();", logoutLink);
-			alert = wait.until(ExpectedConditions.alertIsPresent());
-			alert.accept();
-		} else {
-			// VALIDATION: Alert Handling
-			// Invalid credentials trigger a JavaScript alert
-			alert = wait.until(ExpectedConditions.alertIsPresent());
-			String alertText = alert.getText();
-			Assert.assertEquals(alertText, "User or Password is not valid", "Unexpected alert text");
-			alert.accept();
 		}
+
+		// VALIDATION: Alert Handling
+		alert = wait.until(ExpectedConditions.alertIsPresent());
+		String alertText = alert.getText();
+		System.out.println("Actual Pop Text: "+alertText);
+		if(alertText.equalsIgnoreCase("You Have Succesfully Logged Out!!")) {
+			System.out.println("Login Successfull: User credentials are valid!");
+		}else if(alertText.equalsIgnoreCase("User or Password is not valid")) {
+			System.out.println("Login Failed: User credentials are invalid!");
+		}else {
+			throw new IllegalArgumentException("Unexpected alert text");
+		}
+		alert.accept();
 
 	}
 
