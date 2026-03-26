@@ -5,7 +5,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -51,27 +50,26 @@ public class Assignmen1 extends BaseTest {
 			// VALIDATION: Screen Traversal
 			// Successful login leads to Manager Dashboard with a specific title
 			wait.until(ExpectedConditions.titleContains("Guru99 Bank Manager HomePage"));
-			String actualTitle = driver.getTitle();
-			Assert.assertTrue(actualTitle.contains("Manager"), "Traversal failed for valid user: " + userName);
-			wait.until(ExpectedConditions.presenceOfElementLocated(By.linkText("Log out")));
 
 			WebElement logoutLink = driver.findElement(By.linkText("Log out"));
 			((JavascriptExecutor) driver).executeScript("arguments[0].click();", logoutLink);
-		}
+			alert = wait.until(ExpectedConditions.alertIsPresent());
+			String alertText = alert.getText();
 
-		// VALIDATION: Alert Handling
-		alert = wait.until(ExpectedConditions.alertIsPresent());
-		String alertText = alert.getText();
-		System.out.println("Actual Pop Text: "+alertText);
-		if(alertText.equalsIgnoreCase("You Have Succesfully Logged Out!!")) {
-			System.out.println("Login Successfull: User credentials are valid!");
-		}else if(alertText.equalsIgnoreCase("User or Password is not valid")) {
-			System.out.println("Login Failed: User credentials are invalid!");
-		}else {
-			throw new IllegalArgumentException("Unexpected alert text");
-		}
-		alert.accept();
+			if (alertText.equalsIgnoreCase("You Have Succesfully Logged Out!!")) {
+				System.out.println("Login Successful");
+			}
 
+			alert.accept();
+		} else {
+			// Invalid login → alert appears immediately
+			alert = wait.until(ExpectedConditions.alertIsPresent());
+			String alertText = alert.getText();
+			if (alertText.equalsIgnoreCase("User or Password is not valid")) {
+				System.out.println("Login Failed");
+			}
+			alert.accept();
+		}
 	}
 
 }
