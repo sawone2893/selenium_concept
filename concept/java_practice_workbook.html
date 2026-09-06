@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Java Practice Workbook — Basic to Advanced</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#eceee6;
+    --paper:#fdfdf9;
+    --rule:rgba(88,116,150,0.20);
+    --margin:#b5443c;
+    --ink:#23262a;
+    --ink-soft:#5b5f57;
+    --accent:#1f5b4c;
+    --accent-soft:#e2ede7;
+    --gold:#c1892c;
+    --gold-soft:#f4e9d4;
+    --serif:'Source Serif 4', Georgia, 'Times New Roman', serif;
+    --mono:'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+    --sidebar-w:270px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--serif);
+    -webkit-font-smoothing:antialiased;
+  }
+  /* subtle graph-paper texture */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(var(--rule) 1px, transparent 1px),
+      linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity:0.35;
+    pointer-events:none;
+    z-index:0;
+  }
+
+  /* ---------- Layout ---------- */
+  .layout{
+    position:relative;
+    z-index:1;
+    display:flex;
+    min-height:100vh;
+  }
+
+  /* ---------- Sidebar (binder tabs) ---------- */
+  .sidebar{
+    width:var(--sidebar-w);
+    flex-shrink:0;
+    background:#233229;
+    color:#e7e6dc;
+    position:sticky;
+    top:0;
+    height:100vh;
+    overflow-y:auto;
+    padding:28px 0 40px;
+  }
+  .sidebar-brand{
+    padding:0 22px 20px;
+    border-bottom:1px solid rgba(255,255,255,0.12);
+    margin-bottom:8px;
+  }
+  .sidebar-brand .kicker{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:0.04em;
+    color:#9fb8a9;
+  }
+  .sidebar-brand h1{
+    font-size:20px;
+    line-height:1.25;
+    margin:6px 0 0;
+    font-weight:600;
+  }
+  .sidebar nav{display:flex; flex-direction:column;}
+  .tab{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    padding:9px 22px;
+    color:#cfd6c9;
+    text-decoration:none;
+    font-size:14.5px;
+    border-left:3px solid transparent;
+    transition:background .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .tab:hover{ background:rgba(255,255,255,0.05); color:#fff; }
+  .tab.active{
+    background:rgba(255,255,255,0.08);
+    border-left-color:var(--gold);
+    color:#fff;
+  }
+  .tab .num{
+    font-family:var(--mono);
+    font-size:12px;
+    color:#8fa799;
+    width:20px;
+    flex-shrink:0;
+  }
+  .tab.active .num{ color:var(--gold); }
+
+  /* ---------- Main ---------- */
+  .main{
+    flex:1;
+    min-width:0;
+    padding: 48px clamp(20px, 5vw, 72px) 120px;
+  }
+  .masthead{
+    max-width:760px;
+    margin-bottom:46px;
+  }
+  .masthead .kicker{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--margin);
+    letter-spacing:0.03em;
+  }
+  .masthead h1{
+    font-size:clamp(32px, 4.2vw, 46px);
+    line-height:1.08;
+    margin:10px 0 14px;
+    font-weight:700;
+    letter-spacing:-0.01em;
+  }
+  .masthead p{
+    font-size:17px;
+    line-height:1.6;
+    color:var(--ink-soft);
+    max-width:62ch;
+  }
+
+  .search-row{
+    margin-top:26px;
+    display:flex;
+    gap:12px;
+    align-items:center;
+    max-width:520px;
+  }
+  .search-row input{
+    flex:1;
+    font-family:var(--mono);
+    font-size:14px;
+    padding:11px 14px;
+    border:1.5px solid #cbd0c4;
+    border-radius:2px;
+    background:var(--paper);
+    color:var(--ink);
+  }
+  .search-row input:focus{
+    outline:none;
+    border-color:var(--accent);
+  }
+  .search-count{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+
+  /* ---------- Chapter ---------- */
+  .chapter{
+    max-width:800px;
+    margin:0 0 64px;
+    scroll-margin-top:24px;
+  }
+  .chapter-head{
+    display:flex;
+    gap:18px;
+    align-items:flex-start;
+    padding-bottom:16px;
+    border-bottom:2px solid var(--ink);
+    margin-bottom:22px;
+  }
+  .chapter-head .chapter-num{
+    font-family:var(--mono);
+    font-size:15px;
+    color:var(--margin);
+    padding-top:6px;
+    flex-shrink:0;
+    width:34px;
+  }
+  .chapter-head h2{
+    font-size:26px;
+    margin:0;
+    font-weight:700;
+    line-height:1.25;
+  }
+
+  /* ---------- Exercise card ---------- */
+  .exercise{
+    background:var(--paper);
+    border-left:4px solid var(--accent);
+    padding:20px 24px 22px;
+    margin-bottom:18px;
+    box-shadow:0 1px 0 rgba(0,0,0,0.03);
+    position:relative;
+  }
+  .exercise.bonus{ border-left-color:var(--gold); }
+  .exercise-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:14px;
+    margin-bottom:10px;
+  }
+  .exercise-title{
+    font-size:18px;
+    font-weight:600;
+    margin:0;
+    line-height:1.35;
+  }
+  .exercise-title .tag{
+    font-family:var(--mono);
+    font-size:12.5px;
+    color:var(--accent);
+    margin-right:9px;
+  }
+  .exercise.bonus .exercise-title .tag{ color:var(--gold); }
+  .dots{
+    display:flex;
+    gap:4px;
+    flex-shrink:0;
+    padding-top:5px;
+  }
+  .dots span{
+    width:7px; height:7px;
+    border-radius:50%;
+    background:#d9dcd0;
+  }
+  .dots span.on{ background:var(--accent); }
+  .exercise.bonus .dots span.on{ background:var(--gold); }
+
+  .exercise p{
+    font-size:15.5px;
+    line-height:1.6;
+    margin:0 0 12px;
+    color:var(--ink);
+  }
+  .exercise p strong{ color:var(--ink); }
+  .exercise .label{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:0.02em;
+    color:var(--ink-soft);
+    display:block;
+    margin-bottom:5px;
+  }
+  .block{
+    background:var(--accent-soft);
+    border-radius:2px;
+    padding:10px 14px;
+    margin:0 0 12px;
+  }
+  .block pre{
+    font-family:var(--mono);
+    font-size:13.3px;
+    line-height:1.55;
+    margin:0;
+    white-space:pre-wrap;
+    color:#173d33;
+  }
+  .constraints{
+    font-size:14.5px;
+    line-height:1.6;
+    color:var(--ink-soft);
+    border-top:1px dashed #d7dacd;
+    padding-top:10px;
+    margin-top:4px;
+  }
+  .constraints .label{ color:var(--margin); }
+
+  .intro{
+    font-size:15.5px;
+    line-height:1.65;
+    color:var(--ink-soft);
+    max-width:70ch;
+    margin-bottom:22px;
+  }
+
+  .hidden{ display:none !important; }
+  .no-results{
+    font-family:var(--mono);
+    font-size:14px;
+    color:var(--ink-soft);
+    padding:40px 0;
+    display:none;
+  }
+
+  /* footer note */
+  .footnote{
+    max-width:760px;
+    border-top:2px solid var(--ink);
+    padding-top:22px;
+    font-size:15px;
+    line-height:1.6;
+    color:var(--ink-soft);
+  }
+
+  /* Mobile nav toggle */
+  .mobile-bar{
+    display:none;
+  }
+
+  @media (max-width: 880px){
+    .sidebar{
+      position:fixed;
+      left:0; top:0;
+      z-index:20;
+      transform:translateX(-100%);
+      transition:transform .2s ease;
+      width:78vw;
+      max-width:300px;
+    }
+    .sidebar.open{ transform:translateX(0); }
+    .mobile-bar{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      position:sticky;
+      top:0;
+      z-index:15;
+      background:var(--bg);
+      padding:14px clamp(16px,5vw,24px);
+      border-bottom:1px solid var(--rule);
+    }
+    .mobile-bar button{
+      font-family:var(--mono);
+      font-size:13px;
+      background:var(--ink);
+      color:#fff;
+      border:none;
+      padding:9px 14px;
+      border-radius:2px;
+    }
+    .mobile-bar .mb-title{
+      font-family:var(--mono);
+      font-size:12px;
+      color:var(--ink-soft);
+    }
+    .backdrop{
+      display:none;
+      position:fixed; inset:0;
+      background:rgba(0,0,0,0.35);
+      z-index:18;
+    }
+    .backdrop.show{ display:block; }
+    .main{ padding-top:24px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="backdrop" id="backdrop"></div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="kicker">JAVA · PRACTICE WORKBOOK</div>
+      <h1>15 Chapters,<br>Basic → Advanced</h1>
+    </div>
+    <nav id="tabnav"></nav>
+  </aside>
+
+  <div class="main">
+    <div class="mobile-bar">
+      <button id="menuBtn">Chapters</button>
+      <span class="mb-title">tap to jump between sections</span>
+    </div>
+
+    <header class="masthead">
+      <div class="kicker">EXERCISE SET · 15 CONCEPTS · 90+ PROBLEMS</div>
+      <h1>The Java Practice Workbook</h1>
+      <p>A lab manual for working through Java, one concept at a time — from variables and loops to concurrency and sealed classes. Every problem has a spec: input, expected output, and the edge cases that separate "it runs" from "it's correct."</p>
+      <div class="search-row">
+        <input type="text" id="searchInput" placeholder="Search exercises — e.g. 'recursion', 'thread', 'stream'…">
+        <span class="search-count" id="searchCount"></span>
+      </div>
+    </header>
+
+    <div id="content"></div>
+    <p class="no-results" id="noResults">No exercises match that search. Try a different word.</p>
+
+    <p class="footnote">Dots below each exercise title mark its position in that chapter's basic → advanced progression; gold entries are bonus challenges. Work a chapter in order — later exercises usually lean on skills from earlier ones.</p>
+  </div>
+</div>
+
+<script>
+const DATA = [
+{ title:"Variables, Data Types & Operators", intro:"The raw materials: how Java stores values and what you can do to them.", exercises:[
+  { title:"Temperature Converter", problem:"Write a program that converts a temperature from Celsius to Fahrenheit and Kelvin.\n\nFormula: F = C × 9/5 + 32, K = C + 273.15", input:"A single double value representing degrees Celsius (e.g., 37.0).", output:"Print both converted values, each rounded to 2 decimal places.", example:"Input: 37.0\nOutput: Fahrenheit: 98.60, Kelvin: 310.15", constraints:"Handle negative temperatures correctly — below absolute zero (-273.15°C) should print a warning instead of a result." },
+  { title:"Swap Without a Temporary Variable", problem:"Given two integer variables a and b, swap their values without declaring a third variable.", example:"Before: a=5, b=10\nAfter:  a=10, b=5", constraints:"Solve it two ways — arithmetic (+/−) and XOR (^). Note what happens if the arithmetic approach is used with values close to Integer.MAX_VALUE (overflow risk)." },
+  { title:"Type Casting Explorer", problem:"Declare a double value 9.999. Cast it to int, long, and float, and print each result along with its data type.", example:"Original double: 9.999\nAs int: 9\nAs long: 9\nAs float: 9.999", constraints:"In a comment, explain why casting to int/long truncates rather than rounds, and what happens if the double is larger than Integer.MAX_VALUE." },
+  { title:"Bitwise Operator Playground", problem:"Given a = 12 and b = 25, compute AND (&), OR (|), XOR (^), NOT (~a), left shift (a << 2), and right shift (b >> 2).", example:"a & b = 8   (binary: 1000)\na | b = 29  (binary: 11101)", constraints:"Print binary representations with Integer.toBinaryString(). Also test with a negative number and explain how ~ and >> handle sign bits, and how >>> differs." },
+  { title:"BMI Calculator with Category", problem:"Calculate Body Mass Index and classify it. Formula: BMI = weight(kg) / height(m)²", input:"height (double, meters), weight (double, kg)", output:"BMI rounded to 1 decimal, plus category: <18.5 Underweight, 18.5–24.9 Normal, 25–29.9 Overweight, ≥30 Obese.", example:"Input: height=1.75, weight=70\nOutput: BMI = 22.9, Category = Normal", constraints:"Validate height and weight are positive; print an error rather than computing if not." },
+  { title:"Integer Overflow Demonstration", bonus:true, problem:"Add 1 to Integer.MAX_VALUE and print the result. Repeat with Long.MAX_VALUE.", constraints:"Explain the two's-complement wraparound in comments, and why Java doesn't throw by default (contrast with Math.addExact())." }
+]},
+{ title:"Control Flow", intro:"Branching and looping — the decisions and repetition that give programs behavior.", exercises:[
+  { title:"FizzBuzz", problem:"Print numbers 1–100. Multiples of 3 → \"Fizz\". Multiples of 5 → \"Buzz\". Multiples of both → \"FizzBuzz\".", example:"1\n2\nFizz\n4\nBuzz\n...\nFizzBuzz", constraints:"Solve with if-else, then again with a ternary or switch expression, and compare readability." },
+  { title:"Grade Calculator", problem:"Given a numeric score (0–100), return a letter grade: 90–100 A, 80–89 B, 70–79 C, 60–69 D, below 60 F.", example:"Input: 85\nOutput: Grade: B", constraints:"Implement with a switch on score/10 (integer division), handling the score=100 edge case correctly." },
+  { title:"Prime Number Checker", problem:"Write isPrime(int n) returning true if n is prime. Use it to print all primes between 1 and 100.", example:"isPrime(17) → true\nisPrime(18) → false", constraints:"Optimize the loop to run only up to √n instead of n — explain why that's sufficient." },
+  { title:"Star & Pyramid Patterns", problem:"Using nested loops, print a right triangle and a centered pyramid of stars for n = 5.", example:"Right triangle:\n*\n**\n***\n****\n*****\n\nPyramid (centered):\n    *\n   ***\n  *****\n *******\n*********", constraints:"For the pyramid, work out the formula for leading spaces (n − row) and stars (2×row − 1) per row before coding." },
+  { title:"Number Guessing Game", problem:"Generate a random number 1–100. The user guesses repeatedly; respond \"Too high\", \"Too low\", or \"Correct!\", then report the attempt count.", example:"Guess: 50 → Too high\nGuess: 25 → Too low\nGuess: 37 → Correct! You won in 3 tries.", constraints:"Limit to 7 attempts; reveal the number and end the game if exceeded." },
+  { title:"Collatz Sequence", bonus:true, problem:"For a positive integer n, repeatedly apply: if even, n = n/2; if odd, n = 3n+1. Stop at 1. Print the sequence and step count.", example:"Input: 6\nSequence: 6 → 3 → 10 → 5 → 16 → 8 → 4 → 2 → 1\nSteps: 8", constraints:"Test with n = 27 (111 steps) to confirm your loop handles longer sequences." }
+]},
+{ title:"Arrays & Strings", intro:"Working with sequences of data and text — searching, transforming, and comparing.", exercises:[
+  { title:"Array Statistics", problem:"Given an int array, compute the minimum, maximum, sum, and average.", example:"Input: {4, 8, 15, 16, 23, 42}\nOutput: Min: 4, Max: 42, Sum: 108, Average: 18.00", constraints:"Handle an empty array gracefully — print a message rather than throwing an exception." },
+  { title:"Reverse an Array In-Place", problem:"Reverse an integer array without creating a second array — swap in place with two pointers.", example:"Input: {1,2,3,4,5} → Output: {5,4,3,2,1}", constraints:"Achieve O(n) time and O(1) extra space. Handle arrays of length 0 and 1." },
+  { title:"Palindrome Checker", problem:"Write isPalindrome(String s) returning true if s reads the same forwards and backwards, ignoring case, spaces, and punctuation.", example:"isPalindrome(\"racecar\") → true\nisPalindrome(\"hello\") → false", constraints:"Don't use StringBuilder.reverse() — compare manually with two pointers." },
+  { title:"Word Frequency Counter", problem:"Given a sentence, count occurrences of each word (case-insensitive), printed sorted by frequency descending.", example:"the: 3\nfox: 2\nquick: 1", constraints:"Strip punctuation before counting. Use a HashMap for counting and a sorted structure for output." },
+  { title:"Two-Sum Problem", problem:"Given an array nums and target, return the indices of the two numbers that add up to target. Exactly one solution exists.", example:"nums = {2,7,11,15}, target = 9 → [0, 1]", constraints:"Solve brute-force O(n²) first, then optimize to O(n) using a HashMap of seen values." },
+  { title:"Matrix Transpose", bonus:true, problem:"Given an m×n 2D array, produce its transpose where result[j][i] = original[i][j].", example:"1 2 3        1 4\n4 5 6   →    2 5\n             3 6", constraints:"Handle non-square matrices correctly — don't assume m == n." },
+  { title:"Anagram Checker", bonus:true, problem:"Write isAnagram(String a, String b) returning true if they're anagrams (ignoring case and spaces).", example:"isAnagram(\"listen\", \"silent\") → true\nisAnagram(\"hello\", \"world\") → false", constraints:"Use character-frequency counting (int[26]) rather than sorting, for O(n) time." }
+]},
+{ title:"Methods & Recursion", intro:"Organizing logic into reusable units, and functions that call themselves.", exercises:[
+  { title:"Factorial: Iterative vs Recursive", problem:"Implement factorial(int n) two ways: an iterative loop and a recursive version.", example:"Input: 5 → Output: 120", constraints:"Handle n = 0 (returns 1) and negative n (throw IllegalArgumentException). Try n = 10000 recursively and note the stack limit." },
+  { title:"Fibonacci with Memoization", problem:"Compute the nth Fibonacci number recursively. Implement naively, time it at n = 40, then optimize with memoization and re-time it.", example:"Input: 10 → Output: 55", constraints:"Document the complexity difference: naive O(2^n) vs. memoized O(n)." },
+  { title:"Method Overloading Practice", problem:"Write add() overloaded for (int,int), (double,double), (int,int,int), and (String,String) — concatenation.", constraints:"Demonstrate a case where overload resolution could be ambiguous (e.g. passing a long) and explain how Java resolves it." },
+  { title:"Variable Arguments (Varargs)", problem:"Write sum(int... numbers) that sums any number of int arguments, including zero.", example:"sum(1,2,3,4) → 10\nsum() → 0", constraints:"Also write printAll(String label, Object... items), combining varargs with a regular parameter." },
+  { title:"Recursive Binary Search", problem:"Given a sorted array and a target, implement binary search recursively, returning the index or -1.", example:"arr = {1,3,5,7,9,11}, target = 7 → 3", constraints:"Track and print the number of recursive calls to observe O(log n) behavior. Test a missing target." },
+  { title:"Tower of Hanoi", bonus:true, problem:"Solve Tower of Hanoi for n disks: move all disks from rod A to rod C via rod B, one at a time, never a larger disk on a smaller one. Print each move.", example:"Move disk 1 from A to C\nMove disk 2 from A to B\nMove disk 1 from C to B\n...", constraints:"Print the total move count and verify it equals 2^n − 1." }
+]},
+{ title:"OOP: Classes & Objects", intro:"Bundling state and behavior — the foundation of object-oriented design.", exercises:[
+  { title:"Basic Class Design — Book", problem:"Design a Book class with private title, author, price. Include a constructor, getters/setters, and a toString().", example:"Book b = new Book(\"1984\", \"George Orwell\", 15.99);\n// \"1984\" by George Orwell - $15.99", constraints:"The price setter should reject negative values (IllegalArgumentException)." },
+  { title:"Static vs Instance — Object Counter", problem:"Create a Counter class with a static int count incremented on every instantiation, plus a static getCount().", example:"new Counter(); new Counter(); new Counter();\nCounter.getCount(); // 3", constraints:"Explain in a comment why count must be static rather than an instance field." },
+  { title:"Encapsulation — Bank Account", problem:"Design BankAccount with a private double balance, plus deposit() and withdraw() that validate input.", example:"acc.deposit(50);   // ok\nacc.withdraw(200); // throws if insufficient funds", constraints:"No public setter for balance — it can only change via deposit/withdraw." },
+  { title:"Constructor Overloading & Chaining", problem:"Give Book three constructors: no-arg (all defaults), two-arg (title, author), and full three-arg — chained via this(...).", constraints:"Verify each constructor path produces a correctly initialized object." },
+  { title:"Composition — Car and Engine", problem:"Design Engine (horsepower, fuelType, start()) and a Car that has-a Engine field plus make/model. startCar() delegates to engine.start().", constraints:"Explain why composition (\"has-a\") fits better than inheritance here — a Car is not a type of Engine." },
+  { title:"equals() and hashCode() — Point Class", bonus:true, problem:"Create Point(x, y). Override equals() so points are equal by coordinates, and hashCode() consistently. Add duplicates to a HashSet to confirm rejection.", constraints:"Follow the contract: if a.equals(b), then a.hashCode() == b.hashCode(). Use Objects.equals()/Objects.hash()." }
+]},
+{ title:"Inheritance & Polymorphism", intro:"Sharing and specializing behavior across a class hierarchy.", exercises:[
+  { title:"Basic Inheritance — Animal Hierarchy", problem:"Create Animal (field name, method makeSound()). Create Dog and Cat overriding makeSound().", example:"Animal a = new Dog(\"Rex\");\na.makeSound(); // \"Rex says: Woof!\"", constraints:"Animal's constructor accepts name; subclasses must call super(name)." },
+  { title:"Overriding vs Overloading — Side-by-Side", problem:"Demonstrate overriding (subclass changes parent behavior, runtime-resolved) and overloading (same name, different params, compile-resolved) in one program.", constraints:"Comment on which mechanism is compile-time and which is runtime binding." },
+  { title:"The super Keyword", problem:"Dog's constructor calls super(name); Dog.makeSound() calls super.makeSound() then prints its own sound.", example:"Rex makes a sound.\nRex says: Woof!", constraints:"Show the compiler error from calling super() after other statements in a constructor." },
+  { title:"Polymorphic Array Processing", problem:"Create an Animal[] mixing Dog, Cat, etc. Loop through calling makeSound() via the Animal reference type.", constraints:"Add a new Bird subclass afterward and confirm the same loop works unmodified (Open/Closed Principle)." },
+  { title:"Abstract Classes — Shape Hierarchy", problem:"Create abstract class Shape with abstract area() and concrete printArea(). Implement Circle and Rectangle.", example:"Shape c = new Circle(5);\nc.printArea(); // Area: 78.54", constraints:"Confirm new Shape() fails to compile, and explain why abstract classes can't be instantiated." },
+  { title:"instanceof & Safe Downcasting", bonus:true, problem:"Given an Animal reference that might be Dog, Cat, or Bird, use instanceof to check the real type and call a subclass-only method like Dog.fetch().", constraints:"Handle the case where the object matches none of the known subclasses, without a ClassCastException." }
+]},
+{ title:"Interfaces & Abstraction", intro:"Designing contracts that different classes can fulfill in their own way.", exercises:[
+  { title:"Basic Interface — Payable", problem:"Define Payable with calculatePay(). Implement in Employee (fixed salary) and Freelancer (rate × hours).", example:"e.calculatePay(); // 5000.0\nf.calculatePay(); // 1000.0", constraints:"Write printPaySlip(Payable p) that works for any implementation — interface-based polymorphism." },
+  { title:"Multiple Interface Implementation — Duck", problem:"Define Flyable (fly()) and Swimmable (swim()). Duck implements both; Fish implements only Swimmable.", constraints:"Write a method accepting Flyable and calling fly(); confirm it accepts Duck but rejects Fish at compile time." },
+  { title:"Default & Static Interface Methods", problem:"Add a default describe() to Payable using calculatePay() internally. Add a static Payable.compare(a, b).", constraints:"Override describe() in one implementer to show defaults can still be overridden." },
+  { title:"Functional Interfaces & Lambdas", problem:"Define @FunctionalInterface Calculator with int operate(int a, int b). Implement add/subtract/multiply as lambdas.", example:"Calculator add = (a, b) -> a + b;\nadd.operate(3, 4); // 7", constraints:"Confirm the compiler rejects a second abstract method on a @FunctionalInterface." },
+  { title:"Interface vs Abstract Class — Vehicle", problem:"Model Car/Motorcycle twice: once via an abstract class Vehicle, once via an interface Vehicle.", constraints:"Write a short comparison: can they hold state? Multiple inheritance? When to choose each?" },
+  { title:"Comparable & Comparator — Student Sorting", bonus:true, problem:"Student implements Comparable<Student> by GPA ascending. Separately, a Comparator<Student> sorts by name.", example:"Collections.sort(students);       // by GPA\nstudents.sort(nameComparator);    // by name", constraints:"Sort the same list both ways and confirm the results differ." }
+]},
+{ title:"Exception Handling", intro:"Anticipating and recovering from failure without crashing the program.", exercises:[
+  { title:"Try-Catch Basics — Safe Division", problem:"Write safeDivide(int a, int b) catching ArithmeticException on divide-by-zero, returning 0 with a friendly message.", example:"safeDivide(10, 2) → 5\nsafeDivide(10, 0) → prints message, returns 0", constraints:"—" },
+  { title:"Multiple Catch Blocks", problem:"Parse a String[] and an index, accessing array[index] and Integer.parseInt() on it. Catch ArrayIndexOutOfBoundsException and NumberFormatException separately.", example:"parse({\"1\",\"2\",\"abc\"}, 2) → \"Invalid number format: abc\"\nparse({\"1\",\"2\"}, 5) → \"Index 5 is out of bounds\"", constraints:"Add a final catch (Exception e) fallback — explain why it must come last." },
+  { title:"Custom Checked Exception — Insufficient Funds", problem:"Create InsufficientFundsException extends Exception. Throw it from BankAccount.withdraw() when the amount exceeds the balance.", example:"try { account.withdraw(500); }\ncatch (InsufficientFundsException e) { ... }", constraints:"Explain the difference from an unchecked exception like IllegalArgumentException, and when to use each." },
+  { title:"finally & try-with-resources", problem:"Show a finally block always runs, even when an exception is thrown. Then rewrite the same logic with try-with-resources.", constraints:"Force an exception partway through and confirm the resource still closes in both versions." },
+  { title:"Exception Chaining", problem:"Catch a low-level exception and rethrow it wrapped in a custom ServiceException, preserving the original as the cause.", constraints:"Print the full stack trace and confirm the original appears as \"Caused by:\"." },
+  { title:"Input Validation Pipeline", bonus:true, problem:"Build UserValidator.validate(username, email) throwing EmptyFieldException, TooLongException, or InvalidEmailException — all extending a common ValidationException.", constraints:"Catch the base type once and react differently per specific type via instanceof or multi-catch." }
+]},
+{ title:"Collections Framework", intro:"Java's built-in structures for storing and organizing groups of data.", exercises:[
+  { title:"ArrayList Fundamentals", problem:"Create an ArrayList<String> of fruits. Add 5, remove one by value and one by index, sort alphabetically, search with contains()/indexOf().", constraints:"After sorting, insert a new item at a specific index with add(index, element)." },
+  { title:"Set Deduplication — HashSet & TreeSet", problem:"Given a List<Integer> with duplicates, dedupe with a HashSet, then again with a TreeSet for sorted uniques.", example:"Input: {5,3,8,3,1,5,9,1}\nHashSet: unique, unordered\nTreeSet: [1,3,5,8,9]", constraints:"—" },
+  { title:"HashMap Phonebook", problem:"Build a phonebook with HashMap<String,String>. Implement addContact, lookupContact (\"Not found\" if absent), removeContact, listAllContacts.", constraints:"Decide and document behavior when adding a name that already exists." },
+  { title:"Safe Iteration & Removal", problem:"Remove all even numbers from a List<Integer> while iterating. Try a naive for-each + remove() first (observe ConcurrentModificationException), then fix with an Iterator or removeIf().", constraints:"Explain exactly why the naive approach fails." },
+  { title:"Multi-Field Custom Sorting", problem:"Sort List<Employee> by department (alphabetically), then salary (descending) within each department, using Comparator.comparing().thenComparing().", example:"Before: [Bob-Sales-50k, Amy-Eng-90k, Cid-Sales-70k]\nAfter:  [Amy-Eng-90k, Cid-Sales-70k, Bob-Sales-50k]", constraints:"—" },
+  { title:"ArrayList vs LinkedList Benchmark", bonus:true, problem:"Insert 100,000 elements at index 0 of both an ArrayList and a LinkedList, timing each with System.nanoTime().", constraints:"Explain the result in terms of the underlying data structure." },
+  { title:"Deque as Stack and Queue", bonus:true, problem:"Using one ArrayDeque<Integer>, demonstrate stack behavior (push/pop, LIFO) and queue behavior (offer/poll, FIFO).", constraints:"Print removal order for each to confirm the difference." }
+]},
+{ title:"Generics", intro:"Writing type-safe code that works across many types without duplication.", exercises:[
+  { title:"Generic Box Class", problem:"Create Box<T> with a private T content, a constructor, set(T item), get(). Instantiate with String, Integer, and a custom class.", constraints:"Confirm box.set(incompatibleType) fails at compile time." },
+  { title:"Generic Method — Find Maximum", problem:"Write <T> T findMax(T[] array, Comparator<T> comparator). Test with Integer[] (natural order) and String[] (by length).", example:"findMax({3,7,2}, naturalOrder()) → 7\nfindMax({\"a\",\"bbb\",\"cc\"}, byLength) → \"bbb\"", constraints:"—" },
+  { title:"Bounded Type Parameters — Sum of Numbers", problem:"Write <T extends Number> double sumAll(List<T> list) using .doubleValue() on each element.", constraints:"Confirm the compiler rejects a List<String>." },
+  { title:"Wildcards — extends vs super", problem:"Write printNumbers(List<? extends Number> list) and addIntegers(List<? super Integer> list).", constraints:"Explain the PECS principle: extends for reading (producer), super for writing (consumer)." },
+  { title:"Generic Pair Class", problem:"Create Pair<K,V> (key, value, getKey(), getValue(), toString()). Use it in findOldestPerson(Map<String,Integer>) to return two values at once.", example:"findOldestPerson({Alice:30, Bob:45}) → Pair(\"Bob\", 45)", constraints:"—" },
+  { title:"Generic Stack Implementation", bonus:true, problem:"Implement your own Stack<T> backed by an ArrayList<T>: push, pop (throws if empty), peek, isEmpty, size.", constraints:"Don't use java.util.Stack — build the logic yourself and test LIFO order with 3+ pushes/pops." }
+]},
+{ title:"Lambdas & Streams", intro:"Functional-style processing: transforming collections declaratively instead of with loops.", exercises:[
+  { title:"Lambdas Replacing Anonymous Classes", problem:"Rewrite an anonymous Runnable and an anonymous Comparator<String> (by length) using lambda expressions.", constraints:"Confirm both versions behave identically." },
+  { title:"Stream Filter & Map", problem:"Given nums 1–10, filter evens, square each, collect into a new List<Integer> — one chained stream statement.", example:"Expected: [4, 16, 36, 64, 100]", constraints:"No loops — filter().map().collect() only." },
+  { title:"Grouping & Aggregating with Collectors", problem:"Group List<Employee> by department with Collectors.groupingBy(), and compute average salary per department with Collectors.averagingDouble().", example:"{Engineering=[Amy, Ravi], Sales=[Bob, Cid]}\n{Engineering=85000.0, Sales=60000.0}", constraints:"—" },
+  { title:"Method References Refactor", problem:"Refactor a lambda-based stream pipeline into equivalent method references.", constraints:"Include a static reference, an instance reference on a specific object, and a constructor reference (ClassName::new)." },
+  { title:"Optional — Avoiding Null Checks", problem:"Write Optional<String> findUserById(Map<Integer,String> users, int id). Handle it via isPresent()/get(), ifPresentOrElse(), and orElse(\"Guest\").", constraints:"Explain why returning Optional beats returning null from an API." },
+  { title:"Reduce — Custom Aggregation", bonus:true, problem:"Use Stream.reduce() to compute a factorial from IntStream.rangeClosed(1,n), and to concatenate a List<String> — no loops.", example:"factorial(5) → 120\nconcatenate([\"a\",\"b\",\"c\"]) → \"a,b,c\"", constraints:"—" },
+  { title:"Sequential vs Parallel Streams", bonus:true, problem:"Sum 10 million integers with .stream() and .parallelStream(), timing each.", constraints:"Explain when parallel streams help vs. when overhead makes them slower." }
+]},
+{ title:"Multithreading & Concurrency", intro:"Running work in parallel safely — and seeing what happens when you don't.", exercises:[
+  { title:"Thread Creation — Two Ways", problem:"Create a Thread subclass printing 1–5, and a Runnable printing A–E. Start both and observe interleaved output.", constraints:"Call .join() on both before printing \"Done\" to guarantee completion." },
+  { title:"Race Condition & Synchronization", problem:"A shared Counter.increment() does count++. Launch 100 threads × 1000 increments each. Print the final count (rarely 100,000). Fix with synchronized and confirm correctness.", constraints:"—" },
+  { title:"ExecutorService & Thread Pools", problem:"Use Executors.newFixedThreadPool(4) to submit 10 tasks. shutdown() and awaitTermination() before printing \"All tasks done\".", constraints:"Explain why a raw Thread per task doesn't scale like a pool." },
+  { title:"Producer-Consumer with BlockingQueue", problem:"A producer generates 1–20 into a BlockingQueue<Integer>; a consumer takes and prints them without finishing early.", constraints:"Use a sentinel value or a known fixed count so the consumer knows when to stop." },
+  { title:"CompletableFuture Chaining", problem:"Simulate fetching a user ID with supplyAsync(), chain thenApply() to get a username, then thenAccept() to print a greeting.", example:"supplyAsync(fetchUserId)\n  .thenApply(idToName)\n  .thenAccept(name -> print(\"Hello, \" + name))", constraints:"—" },
+  { title:"Deadlock Demonstration & Fix", bonus:true, problem:"Two threads acquire lockA/lockB in opposite order, causing a deadlock. Fix by enforcing a consistent lock order.", constraints:"—" },
+  { title:"AtomicInteger vs synchronized", bonus:true, problem:"Rewrite the race-condition counter using AtomicInteger.incrementAndGet() instead of synchronized.", constraints:"Compare code simplicity and performance under contention." }
+]},
+{ title:"File I/O & Serialization", intro:"Reading, writing, and persisting data beyond the life of the program.", exercises:[
+  { title:"Basic Text File Read/Write", problem:"Write a List<String> to notes.txt with BufferedWriter, then read it back line by line with BufferedReader, printing line numbers.", constraints:"Use try-with-resources for both the writer and reader." },
+  { title:"NIO File Operations", problem:"Write a list of strings with Files.write(), read them back with Files.readAllLines(), and check existence with Files.exists() first.", constraints:"—" },
+  { title:"Simple CSV Parser", problem:"Parse a CSV with a header row into a List<Map<String,String>>, one map per data row.", example:"name,age,city\nAlice,30,NYC\nBob,25,LA\n→ [{name=Alice,age=30,city=NYC}, {name=Bob,age=25,city=LA}]", constraints:"Handle a trailing empty line gracefully — no phantom empty row." },
+  { title:"Object Serialization", problem:"Make Person (name, age) Serializable. Write it with ObjectOutputStream, read it back with ObjectInputStream, and confirm the fields match.", constraints:"Add a transient field (e.g. password) and confirm it comes back null after deserialization — explain why." },
+  { title:"Recursive Directory Traversal", problem:"Given a directory path, recursively list every file (including subdirectories) with relative path and size in bytes.", constraints:"Handle a path that doesn't exist or isn't a directory with a clear error, not a crash." },
+  { title:"Properties File Reader", bonus:true, problem:"Read a simple app.properties (key=value pairs) with java.util.Properties, retrieving values by key with a sensible default when missing.", constraints:"—" }
+]},
+{ title:"Design Patterns", intro:"Named, reusable solutions to recurring design problems.", exercises:[
+  { title:"Singleton Pattern — Thread-Safe Logger", problem:"Implement a Logger with only one instance ever, via Logger.getInstance(), safe under concurrent calls from multiple threads.", constraints:"Implement at least one of: synchronized lazy init, double-checked locking, or eager static init — explain the tradeoff." },
+  { title:"Builder Pattern — Configurable Pizza", problem:"Design Pizza with many optional fields. Use a Pizza.Builder inner class for chained construction instead of a telescoping constructor.", example:"new Pizza.Builder(\"Large\")\n  .addCheese()\n  .addPepperoni()\n  .build();", constraints:"size is required (passed to the Builder's constructor); everything else optional with sensible defaults." },
+  { title:"Observer Pattern — Event Notification", problem:"A Publisher keeps a list of Subscriber objects (interface with update(event)). notifyAll(event) fires every subscriber's update().", constraints:"Implement at least two Subscriber types (e.g. EmailSubscriber, SmsSubscriber) with different behavior." },
+  { title:"Factory Pattern — Shape Factory", problem:"ShapeFactory.createShape(type) returns Circle, Square, or Triangle (all implementing Shape) based on a string, throwing IllegalArgumentException for unknown types.", example:"Shape s = ShapeFactory.createShape(\"circle\");\ns.draw(); // \"Drawing a circle\"", constraints:"—" },
+  { title:"Strategy Pattern — Payment Methods", problem:"Define PaymentStrategy.pay(amount). Implement CreditCardPayment and PayPalPayment. ShoppingCart accepts a strategy and calls it at checkout — swappable at runtime.", constraints:"—" },
+  { title:"Decorator Pattern — Coffee Order", bonus:true, problem:"Coffee interface with cost()/description(). SimpleCoffee base, plus MilkDecorator and SugarDecorator wrapping a Coffee to add cost and description.", example:"new SugarDecorator(new MilkDecorator(new SimpleCoffee()))\n.description(); // \"Simple Coffee, Milk, Sugar\"", constraints:"—" }
+]},
+{ title:"JVM Internals & Modern Java", intro:"Under-the-hood mechanics and the newer language features built on top of them.", exercises:[
+  { title:"Immutable Class Design", problem:"Design ImmutablePoint: all fields private final, no setters, values set only via constructor. If a field is mutable (e.g. a List), defensively copy it in the constructor and any getter.", constraints:"Test mutating a list passed into the constructor afterward, and confirm internal state is unaffected." },
+  { title:"Reflection Basics", problem:"Given any class, use getDeclaredFields()/getDeclaredMethods() to print all field names/types and method names at runtime, without hardcoding them. Then invoke a specific method dynamically by name.", constraints:"—" },
+  { title:"Custom Annotation — @Loggable", problem:"Define @Loggable (RUNTIME retention) for methods. Write a small processor using reflection that prints a message before invoking any annotated method.", constraints:"—" },
+  { title:"Stack vs Heap & Garbage Collection", problem:"Write a program mixing primitive locals (stack) and objects (heap). Trace in comments which values live where, and when an object becomes GC-eligible.", constraints:"Use a specific example — e.g. a reference going out of scope or being set to null." },
+  { title:"Enum with Per-Constant Behavior", problem:"Create enum Operation { ADD, SUBTRACT, MULTIPLY, DIVIDE } where each constant overrides an abstract apply(int a, int b).", example:"Operation.ADD.apply(3, 4);      // 7\nOperation.MULTIPLY.apply(3, 4); // 12", constraints:"Handle DIVIDE by zero with a clear exception from within that constant's implementation." },
+  { title:"Records — Modernizing Immutable Classes", bonus:true, problem:"Rewrite ImmutablePoint as record Point(int x, int y). Compare line count; confirm equals()/hashCode()/toString() come for free.", constraints:"Note that records can't have extra mutable fields — all components are implicitly final." },
+  { title:"Sealed Classes & Pattern Matching", bonus:true, problem:"Model sealed interface Shape permits Circle, Square, Triangle (Java 17+). Compute area with a switch expression using pattern matching.", constraints:"Confirm the compiler enforces exhaustiveness — a missing case is a compile error, not a runtime surprise." }
+]}
+];
+
+/* ---------- Render ---------- */
+const tabnav = document.getElementById('tabnav');
+const content = document.getElementById('content');
+
+DATA.forEach((ch, i) => {
+  const id = 'ch-' + (i+1);
+  const num = String(i+1).padStart(2,'0');
+
+  const tab = document.createElement('a');
+  tab.href = '#' + id;
+  tab.className = 'tab';
+  tab.dataset.target = id;
+  tab.innerHTML = `<span class="num">${num}</span><span>${ch.title}</span>`;
+  tabnav.appendChild(tab);
+
+  const section = document.createElement('section');
+  section.className = 'chapter';
+  section.id = id;
+
+  let exHtml = '';
+  ch.exercises.forEach((ex, j) => {
+    const dotCount = ch.exercises.filter(e => !e.bonus).length;
+    const dotIndex = ex.bonus ? dotCount : (ch.exercises.slice(0,j+1).filter(e=>!e.bonus).length);
+    let dots = '';
+    const total = Math.max(dotCount, 4);
+    for(let d=1; d<=total; d++){
+      dots += `<span class="${d<=dotIndex ? 'on':''}"></span>`;
+    }
+    const tagLabel = ex.bonus ? 'BONUS' : (num + '.' + (j+1 - ch.exercises.slice(0,j).filter(e=>e.bonus).length));
+
+    exHtml += `
+    <article class="exercise${ex.bonus ? ' bonus':''}" data-search="${(ex.title+' '+ex.problem+' '+(ex.constraints||'')).toLowerCase().replace(/"/g,'&quot;')}">
+      <div class="exercise-head">
+        <h3 class="exercise-title"><span class="tag">${tagLabel}</span>${ex.title}</h3>
+        <div class="dots">${dots}</div>
+      </div>
+      <p>${ex.problem.replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>')}</p>
+      ${ex.input ? `<p><strong>Input:</strong> ${ex.input}</p>` : ''}
+      ${ex.output ? `<p><strong>Output:</strong> ${ex.output}</p>` : ''}
+      ${ex.example ? `<span class="label">EXAMPLE</span><div class="block"><pre>${ex.example}</pre></div>` : ''}
+      ${ex.constraints && ex.constraints !== '—' ? `<div class="constraints"><span class="label">CONSTRAINTS &amp; NOTES</span>${ex.constraints}</div>` : ''}
+    </article>`;
+  });
+
+  section.innerHTML = `
+    <div class="chapter-head">
+      <span class="chapter-num">${num}</span>
+      <h2>${ch.title}</h2>
+    </div>
+    <p class="intro">${ch.intro}</p>
+    ${exHtml}
+  `;
+  content.appendChild(section);
+});
+
+/* ---------- Active tab on scroll ---------- */
+const tabs = Array.from(document.querySelectorAll('.tab'));
+const sections = Array.from(document.querySelectorAll('.chapter'));
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      tabs.forEach(t=>t.classList.remove('active'));
+      const match = tabs.find(t=>t.dataset.target===entry.target.id);
+      if(match) match.classList.add('active');
+    }
+  });
+}, { rootMargin: '-10% 0px -70% 0px', threshold: 0 });
+sections.forEach(s=>observer.observe(s));
+
+/* ---------- Search filter ---------- */
+const searchInput = document.getElementById('searchInput');
+const searchCount = document.getElementById('searchCount');
+const noResults = document.getElementById('noResults');
+const allExercises = Array.from(document.querySelectorAll('.exercise'));
+
+searchInput.addEventListener('input', ()=>{
+  const q = searchInput.value.trim().toLowerCase();
+  let visibleCount = 0;
+
+  sections.forEach(section=>{
+    let anyVisibleInSection = false;
+    section.querySelectorAll('.exercise').forEach(ex=>{
+      const match = !q || ex.dataset.search.includes(q);
+      ex.classList.toggle('hidden', !match);
+      if(match){ visibleCount++; anyVisibleInSection = true; }
+    });
+    section.classList.toggle('hidden', !anyVisibleInSection);
+  });
+
+  searchCount.textContent = q ? `${visibleCount} match${visibleCount===1?'':'es'}` : '';
+  noResults.style.display = (q && visibleCount===0) ? 'block' : 'none';
+});
+
+/* ---------- Mobile menu ---------- */
+const sidebar = document.getElementById('sidebar');
+const backdrop = document.getElementById('backdrop');
+const menuBtn = document.getElementById('menuBtn');
+function closeMenu(){ sidebar.classList.remove('open'); backdrop.classList.remove('show'); }
+menuBtn && menuBtn.addEventListener('click', ()=>{
+  sidebar.classList.add('open');
+  backdrop.classList.add('show');
+});
+backdrop.addEventListener('click', closeMenu);
+tabs.forEach(t=>t.addEventListener('click', closeMenu));
+</script>
+</body>
+</html>
